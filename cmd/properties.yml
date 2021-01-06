@@ -1,0 +1,4 @@
+database:
+  uri: 'mongodb+srv://admin:Admin1234@cluster0.zh2ve.mongodb.net/items?retryWrites=true&w=majority'
+  database: 'items'
+  collection: 'items'
