@@ -2,8 +2,8 @@ package item
 
 import (
 	"context"
-	"github.com/mirodobrovocky/project1/internal/database"
-	"github.com/mirodobrovocky/project1/internal/exception"
+	"github.com/mirodobrovocky/project1/pkg/database"
+	"github.com/mirodobrovocky/project1/pkg/exception"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

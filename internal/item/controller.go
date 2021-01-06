@@ -3,7 +3,7 @@ package item
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
-	"github.com/mirodobrovocky/project1/internal/exception"
+	"github.com/mirodobrovocky/project1/pkg/exception"
 	"github.com/mirodobrovocky/project1/pkg/util"
 	"net/http"
 )
