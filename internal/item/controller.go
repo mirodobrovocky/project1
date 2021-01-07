@@ -69,6 +69,7 @@ func (c controller) CreateItem(response http.ResponseWriter, request *http.Reque
 
 	if err:= util.JsonDecode(request.Body, &item); err != nil {
 		handleBadRequest("CreateItem", response, err)
+		return
 	}
 
 	if err := c.validate.Struct(item); err != nil {
