@@ -1,4 +1,4 @@
-package service
+package item_test
 
 import (
 	"github.com/mirodobrovocky/project1/internal/item"
