@@ -25,7 +25,7 @@ func main() {
 	//go:embed "properties.yml"
 	var propertiesBytes []byte
 	var properties properties
-	err := yaml.Unmarshal(propertiesBytes, &properties); if err != nil {
+	if err := yaml.Unmarshal(propertiesBytes, &properties); err != nil {
 		log.Fatal(err)
 	}
 	databaseConnectionProvider := database.NewConnectionProvider(context.TODO(), database.Properties{
