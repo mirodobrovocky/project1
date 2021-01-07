@@ -1,5 +1,7 @@
 package item
 
+import "github.com/mirodobrovocky/project1/internal/user"
+
 type Service interface {
 	FindAll() ([]Item, error)
 	FindByName(name string) (*Item, error)
@@ -7,7 +9,8 @@ type Service interface {
 }
 
 type service struct {
-	repository Repository
+	repository 	Repository
+	userService user.Service
 }
 
 func (s service) FindAll() ([]Item, error) {
@@ -19,13 +22,17 @@ func (s service) FindByName(name string) (*Item, error) {
 }
 
 func (s service) Create(create CreateDto) (*Item, error) {
-	user := "CurrentUser" //TODO identification
+	currentUser, err := s.userService.GetCurrentUser()
+	if err != nil {
+		return nil, err
+	}
+
 	return s.repository.Save(Item{
 		Name:  create.Name,
-		Owner: user,
+		Owner: currentUser.Name(),
 		Price: create.Price})
 }
 
-func NewService(repository Repository) Service {
-	return service{repository}
+func NewService(repository Repository, userService user.Service) Service {
+	return service{repository, userService}
 }

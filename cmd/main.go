@@ -6,6 +6,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/mirodobrovocky/project1/internal/item"
+	"github.com/mirodobrovocky/project1/internal/user"
 	"github.com/mirodobrovocky/project1/pkg/database"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -33,8 +34,9 @@ func main() {
 		Collection: properties.Database.Collection,
 	})
 
+	userService := user.NewService()
 	itemsRepository := item.NewRepository(databaseConnectionProvider)
-	itemsService := item.NewService(itemsRepository)
+	itemsService := item.NewService(itemsRepository, userService)
 	itemsController := item.NewController(itemsService, validator.New())
 
 	r := mux.NewRouter()
