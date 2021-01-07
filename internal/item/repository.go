@@ -2,6 +2,7 @@ package item
 
 import (
 	"context"
+	"errors"
 	"github.com/mirodobrovocky/project1/pkg/database"
 	"github.com/mirodobrovocky/project1/pkg/exception"
 	"go.mongodb.org/mongo-driver/bson"
@@ -50,7 +51,7 @@ func (r repository) Save(item Item) (*Item, error) {
 
 	insertOneResult, err := r.connectionProvider.GetConnection().InsertOne(ctx, item)
 	if err != nil {
-		return nil, err
+		return nil, resolveWriteError(err)
 	}
 
 	return r.getById(insertOneResult.InsertedID)
@@ -67,7 +68,7 @@ func (r repository) getOne(by string, search interface{}) (*Item, error) {
 
 	var item Item
 	if err := result.Decode(&item); err != nil {
-		return nil, resolveError(err)
+		return nil, resolveReadError(err)
 	}
 
 	return &item, nil
@@ -77,9 +78,30 @@ func NewRepository(connectionProvider database.ConnectionProvider) Repository {
 	return repository{connectionProvider}
 }
 
-func resolveError(err error) error {
+func resolveReadError(err error) error {
 	if err == mongo.ErrNoDocuments {
 		return exception.EntityNotFound
 	}
 	return err
+}
+
+func resolveWriteError(err error) error {
+	if isDuplicate(err) {
+		return exception.Conflict
+	}
+
+	return err
+}
+
+func isDuplicate(err error) bool {
+	var writeException mongo.WriteException
+	if errors.As(err, &writeException) {
+		for _, we := range writeException.WriteErrors {
+			if we.Code == 11000 {
+				return true
+			}
+		}
+	}
+
+	return false
 }

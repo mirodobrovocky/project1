@@ -12,6 +12,11 @@ func handleNotFound(action string, responseWriter http.ResponseWriter, err error
 	log.Printf("action=%s status=notFound error=%v", action, err)
 }
 
+func handleConflict(action string, responseWriter http.ResponseWriter, err error) {
+	responseWriter.WriteHeader(http.StatusConflict)
+	log.Printf("action=%s status=conflict error=%v", action, err)
+}
+
 func handleBadRequest(action string, responseWriter http.ResponseWriter, err error) {
 	responseWriter.WriteHeader(http.StatusBadRequest)
 	log.Printf("action=%s status=badRequest error=%v", action, err)

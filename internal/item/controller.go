@@ -76,8 +76,12 @@ func (c controller) CreateItem(response http.ResponseWriter, request *http.Reque
 		return
 	}
 
-	save, err := c.service.Create(item); if err != nil || save == nil {
-		handleInternalServerError("CreateItem", response, err)
+	save, err := c.service.Create(item); if err != nil {
+		if err == exception.Conflict {
+			handleConflict("CreateItem", response, err)
+		} else {
+			handleInternalServerError("CreateItem", response, err)
+		}
 		return
 	}
 
