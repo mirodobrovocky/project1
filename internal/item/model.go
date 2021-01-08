@@ -3,9 +3,15 @@ package item
 import "go.mongodb.org/mongo-driver/bson"
 
 type Item struct {
-	name  	string  `bson:"name"`
-	owner 	string  `bson:"owner"`
-	price	float64	`bson:"price"`
+	name  	string
+	owner 	string
+	price	float64
+}
+
+type itemBson struct {
+	Name  	string  `bson:"name"`
+	Owner 	string  `bson:"owner"`
+	Price	float64	`bson:"price"`
 }
 
 func (i Item) Name() string {
@@ -48,10 +54,4 @@ func NewItem(name string, owner string, price float64) Item {
 		owner: owner,
 		price: price,
 	}
-}
-
-type itemBson struct {
-	Name  	string  `bson:"name"`
-	Owner 	string  `bson:"owner"`
-	Price	float64	`bson:"price"`
 }
