@@ -144,6 +144,6 @@ type userServiceMock struct {
 }
 
 func (u userServiceMock) GetCurrentUser() (*user.User, error) {
-	currentUser := user.New("me")
+	currentUser := user.NewUser("me")
 	return &currentUser, nil
 }

@@ -17,7 +17,6 @@ type itemBson struct {
 	Owner 		string  	`bson:"owner"`
 	Price		float64		`bson:"price"`
 	CreatedAt 	time.Time 	`bson:"createdAt"`
-
 }
 
 func (i Item) Name() string {
