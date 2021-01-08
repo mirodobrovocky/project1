@@ -8,17 +8,6 @@ import (
 	"net/http"
 )
 
-type CreateDto struct {
-	Name  string  `json:"name" validate:"required"`
-	Price float64 `json:"price" validate:"gt=0"`
-}
-
-type ReadDto struct {
-	Name  string  `json:"name"`
-	Owner string  `json:"owner"`
-	Price float64 `json:"price"`
-}
-
 type Controller interface {
 	GetItems(response http.ResponseWriter, request *http.Request)
 	GetItem(response http.ResponseWriter, request *http.Request)
@@ -41,7 +30,7 @@ func (c controller) GetItems(response http.ResponseWriter, request *http.Request
 
 	var result []ReadDto
 	for _, item := range items {
-		result = append(result, ReadDto{Name: item.Name(), Owner: item.Owner(), Price: item.Price()})
+		result = append(result, itemToReadDto(&item))
 	}
 	writeResponseOk("GetItems", response, result)
 }
@@ -51,11 +40,7 @@ func (c controller) GetItem(response http.ResponseWriter, request *http.Request)
 	params := mux.Vars(request)
 	name := params["name"]
 	if item, err := c.service.FindByName(name); err == nil {
-		writeResponseOk("GetItem", response, ReadDto{
-			Name: item.Name(),
-			Owner: item.Owner(),
-			Price: item.Price(),
-		})
+		writeResponseOk("GetItem", response, itemToReadDto(item))
 	} else if err == exception.EntityNotFound {
 		handleNotFound("GetItem", response, err)
 	} else {
@@ -86,13 +71,18 @@ func (c controller) CreateItem(response http.ResponseWriter, request *http.Reque
 		return
 	}
 
-	writeResponse("CreateItem", response, http.StatusCreated, ReadDto{
-		Name:  save.Name(),
-		Owner: save.Owner(),
-		Price: save.Price(),
-	})
+	writeResponse("CreateItem", response, http.StatusCreated, itemToReadDto(save))
 }
 
 func NewController(service Service, validate *validator.Validate) Controller {
 	return controller{service: service, validate: validate}
+}
+
+func itemToReadDto(item *Item) ReadDto {
+	return ReadDto{
+		Name: item.Name(),
+		Owner: item.Owner(),
+		Price: item.Price(),
+		CreatedAt: item.CreatedAt(),
+	}
 }

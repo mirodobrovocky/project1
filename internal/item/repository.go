@@ -49,6 +49,7 @@ func (r repository) FindByName(name string) (*Item, error) {
 func (r repository) Save(item Item) (*Item, error) {
 	ctx := context.TODO()
 
+	item.BeforeSave()
 	insertOneResult, err := r.connectionProvider.GetConnection().InsertOne(ctx, item)
 	if err != nil {
 		return nil, resolveWriteError(err)
