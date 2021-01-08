@@ -27,10 +27,7 @@ func (s service) Create(create CreateDto) (*Item, error) {
 		return nil, err
 	}
 
-	return s.repository.Save(Item{
-		Name:  create.Name,
-		Owner: currentUser.Name(),
-		Price: create.Price})
+	return s.repository.Save(NewItem(create.Name, currentUser.Name(), create.Price))
 }
 
 func NewService(repository Repository, userService user.Service) Service {

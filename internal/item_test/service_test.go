@@ -8,16 +8,8 @@ import (
 )
 
 var items = []item.Item{
-	{
-		Name: "Item01",
-		Owner: "User01",
-		Price: 199.99,
-	},
-	{
-		Name: "Item02",
-		Owner: "User02",
-		Price: 299.99,
-	},
+	item.NewItem("Item01", "User01", 199.99),
+	item.NewItem("Item02", "User02", 299.99),
 }
 
 type fields struct {
@@ -29,6 +21,7 @@ func Test_itemsService_Create(t *testing.T) {
 	type args struct {
 		create item.CreateDto
 	}
+	itemToBeCreated := item.NewItem("Item01", "me", 299.99)
 	tests := []struct {
 		name    string
 		fields  fields
@@ -45,11 +38,7 @@ func Test_itemsService_Create(t *testing.T) {
 					Price: 299.99,
 				},
 			},
-			want: &item.Item{
-				Name:  "Item01",
-				Owner: "me",
-				Price: 299.99,
-			},
+			want: &itemToBeCreated,
 			wantErr: false,
 		},
 	}

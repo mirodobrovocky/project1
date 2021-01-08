@@ -41,7 +41,7 @@ func (c controller) GetItems(response http.ResponseWriter, request *http.Request
 
 	var result []ReadDto
 	for _, item := range items {
-		result = append(result, ReadDto{Name: item.Name, Owner: item.Owner, Price: item.Price})
+		result = append(result, ReadDto{Name: item.Name(), Owner: item.Owner(), Price: item.Price()})
 	}
 	writeResponseOk("GetItems", response, result)
 }
@@ -52,9 +52,9 @@ func (c controller) GetItem(response http.ResponseWriter, request *http.Request)
 	name := params["name"]
 	if item, err := c.service.FindByName(name); err == nil {
 		writeResponseOk("GetItem", response, ReadDto{
-			Name: item.Name,
-			Owner: item.Owner,
-			Price: item.Price,
+			Name: item.Name(),
+			Owner: item.Owner(),
+			Price: item.Price(),
 		})
 	} else if err == exception.EntityNotFound {
 		handleNotFound("GetItem", response, err)
@@ -87,9 +87,9 @@ func (c controller) CreateItem(response http.ResponseWriter, request *http.Reque
 	}
 
 	writeResponse("CreateItem", response, http.StatusCreated, ReadDto{
-		Name:  save.Name,
-		Owner: save.Owner,
-		Price: save.Price,
+		Name:  save.Name(),
+		Owner: save.Owner(),
+		Price: save.Price(),
 	})
 }
 
