@@ -5,13 +5,13 @@ type Service interface {
 }
 
 type service struct {
-
+	repository Repository
 }
 
 func (s service) GetCurrentUser() (*User, error) {
-	return &User{"CurrentUser"}, nil
+	return s.repository.FindById(1)
 }
 
-func NewService() Service {
-	return service{}
+func NewService(repository Repository) Service {
+	return service{repository: repository}
 }

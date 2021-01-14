@@ -1,4 +1,7 @@
-database:
+mongo:
   uri: 'mongodb+srv://admin:Admin1234@cluster0.zh2ve.mongodb.net/items?retryWrites=true&w=majority'
   database: 'items'
   collection: 'items'
+postgres:
+  dns: 'host=postgresql-18409-0.cloudclusters.net user=gorm password=gormgorm dbname=gorm port=18432'
+  singularTable: true

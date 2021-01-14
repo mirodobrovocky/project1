@@ -7,4 +7,6 @@ require (
 	github.com/gorilla/mux v1.8.0
 	go.mongodb.org/mongo-driver v1.4.4
 	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+	gorm.io/driver/postgres v1.0.6
+	gorm.io/gorm v1.20.11
 )

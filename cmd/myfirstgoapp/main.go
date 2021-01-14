@@ -1,10 +1,10 @@
 package main
 
 import (
-	"context"
 	_ "embed"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"github.com/mirodobrovocky/project1/internal/config"
 	"github.com/mirodobrovocky/project1/internal/item"
 	"github.com/mirodobrovocky/project1/internal/user"
 	"github.com/mirodobrovocky/project1/pkg/database"
@@ -13,29 +13,19 @@ import (
 	"net/http"
 )
 
-type properties struct {
-	Database struct {
-		Uri			string
-		Database 	string
-		Collection 	string
-	}
-}
-
 func main() {
 	//go:embed "properties.yml"
 	var propertiesBytes []byte
-	var properties properties
+	var properties config.Properties
 	if err := yaml.Unmarshal(propertiesBytes, &properties); err != nil {
 		log.Fatal(err)
 	}
-	databaseConnectionProvider := database.NewConnectionProvider(context.TODO(), database.Properties{
-		Uri:        properties.Database.Uri,
-		Database:   properties.Database.Database,
-		Collection: properties.Database.Collection,
-	})
+	mongoConnection := database.GetMongoConnection(properties)
+	postgresConnection := database.GetPostgresConnection(properties)
 
-	userService := user.NewService()
-	itemsRepository := item.NewRepository(databaseConnectionProvider)
+	userRepository := user.NewRepository(postgresConnection)
+	userService := user.NewService(userRepository)
+	itemsRepository := item.NewRepository(mongoConnection)
 	itemsService := item.NewService(itemsRepository, userService)
 	itemsController := item.NewController(itemsService, validator.New())
 
